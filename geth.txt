@@ -1,0 +1,52 @@
+git config --global core.autocrlf false
+git config --global core.longpaths true
+curl -sSL http://bit.ly/2ysbOFE | bash -s 2.2.0
+./network.sh createChannel
+
+sudo apt install make
+ git clone-b release/1.11--depth 1https://github.com/ethereum/go-ethereum.git
+cd go-ethereum
+make geth
+sudo ln -f ./build/bin/geth /usr/local/bin
+1.Go to google search geth version 1.12.0 and go to this(https://ethereumpow.github.io/go-ethereum/downloads/) and download 1.11.5 (64-bit)
+2.Copy the downloaded file to home/owais/
+3.Execute the following commands
+sudo apt-get remove geth
+tar -xzvf geth-linux-amd64-1.11.5-a38f4108.tar.gz
+sudo cp geth /usr/bin
+geth version
+
+install golang  go
+touch genesis.json
+{
+ "config": {
+ "chainId": 6969,
+ "homesteadBlock": 0,
+ "eip150Block": 0,
+ "eip155Block": 0,
+ "eip158Block": 0,
+ "byzantiumBlock": 0,
+ "constantinopleBlock": 0,
+ "petersburgBlock": 0,
+ "ethash": {}
+ },
+ "difficulty": "4",
+ "gasLimit": "8000000",
+ "alloc": {}
+}
+chmod 777 genesis.json
+geth init --datadir node1 genesis.json
+geth --datadir node1 --networkid 6969 --http --allow-insecure-unlock --nodiscover --rpc.enabledeprecatedpersonal --http.corsdomain "*"
+geth attach node1/geth.ipc
+geth init --datadir node2 genesis.json
+geth --datadir node2 --networkid 6969 --port 42069 --authrpc.port 8552 --rpc.enabledeprecatedpersonal --http.corsdomain "*"
+geth attach node2/geth.ipc
+admin.nodeInfo
+admin.addPeer()
+personal.newAccount()
+miner.setEtherbase(personal.listAccounts[0])
+miner.start()
+miner.stop()
+eth.blockNumber
+eth.getBalance()
+use only if it shows already running: pkill -INT geth
