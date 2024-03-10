@@ -1,0 +1,103 @@
+(docker installation prequisit ) 
+sudo apt-get update 
+sudo apt-get install ca-certificates curl 
+sudo install -m 0755 -d /etc/apt/keyrings 
+sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc 
+sudo chmod a+r /etc/apt/keyrings/docker.asc
+echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \ jammy stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+sudo apt-get update
+
+sudo apt install docker-ce docker-ce-cli containerd.io docker-compose-plugin
+sudo apt install docker-compose
+sudo usermod -aG docker $USER newgrp docker
+sudo docker pull busybox
+sudo docker images
+sudo systemctl status docker
+sudo apt install default-jdk
+sudo apt install git
+
+
+curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash - && sudo apt-get install -y nodejs
+s////////////orudo apt install nodejs
+/////create server for node code and save in file server.js
+const http= require("http")
+
+http.createServer((req,res)=>{
+        res.writeHead(200,{"content-type": "text/html"});
+        res.end("hello")
+}).listen(6969,() => console.log("listening on port6969"))
+
+////run by using    node server.js
+////////go to remix ide on browser 
+
+
+
+Practical 2
+Aim: Create and deploy a block chain network using Hyperledger Fabric
+////SDK for Java.(after docker is installed)
+sudo systemctl status docker    ( not necessary tbh)
+curl -sSL http://bit.ly/2ysbOFE | bash -s 2.2.0
+cd fabric-samples/test-network
+./network.sh up
+./network.sh createchannel
+./network.sh down
+
+prac3///// nteract with a block chain network. Execute transactions and
+requests against a block chain network by creating an app to test the
+//////////network and its rules.
+sudo apt install golang-go
+nano ~./bashrc  /// this will open window 
+export PATH=$PATH:usr/local/go/bin  //type on end and press ctrl+o to save then ctrl+x to return to cmd 
+souce ~./bashrc
+///or go to net download go lang for linux , then extract downloadded shit then open cmd and type 
+sudo mv go /usr/local
+cd /usr/local 
+ ls
+cd go 
+ls bin/
+ls 
+./go
+cd 
+sudo apt install make
+git clone -b release/1.11 --depth 1 https://github.com/ethereum/go-ethereum.git
+cd go-ethereum
+make geth 
+///if u get error run following three 
+sudo add-apt-repository ppa:longsleep/golang-backports
+sudo apt-get update
+sudo apt-get install golang-go
+make geth 
+sudo ln -f ./build/bin/geth /usr/local/bin 
+cd .. && mkdir blockchain
+cd blockchain
+touch genesis.json
+///write code for genesis block and save as genesis.json in blockchain
+{
+"config": {
+"chainId": 6969,
+"homesteadBlock": 0,
+"eip150Block": 0,
+"eip155Block": 0,
+"eip158Block": 0,
+"byzantiumBlock": 0,
+"constantinopleBlock": 0,
+"petersburgBlock": 0,
+"ethash": {}
+},
+"difficulty": "4",
+"gasLimit": "8000000",
+"alloc": {}
+}
+geth init --datadir node1 genesis.json
+work in progress
+
+
+
+
+
+prac 8 Fitness Club reward.
+curl -O https://hyperledger.github.io/composer/latest/prereqs-ubuntu.sh && chmod u+x prereqs-ubuntu.sh
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
+nvm install --lts
+nvm use --lts
+node --version
