@@ -1,0 +1,419 @@
+prac 1
+
+sudo apt-get update
+sudo apt-get install ca-certificates curl
+sudo install -m 0755 -d /etc/apt/keyrings
+sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+sudo chmod a+r /etc/apt/keyrings/docker.asc
+
+
+echo \
+  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
+  $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
+  sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+sudo apt-get update
+
+
+sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin docker-compose
+
+
+sudo usermod -aG docker $USER
+newgrp docker
+
+**REBOOT THE SYSTEM**
+
+
+sudo docker pull busybox
+
+
+sudo docker images
+
+
+curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash - &&\
+sudo apt-get install -y nodejs
+
+node -v
+
+
+const http = require("http")
+http.createServer((req, res) => {
+	res.writeHeads(200, {"content-type": "text/html"});
+	res.end("Hello Node.js")
+}).listen(6969, () => console.log("Listening on port 6969"))
+
+
+
+node file_name.js
+
+http://localhost:6969
+
+
+sudo apt install default-jdk
+
+java --version
+
+
+***download golng from the below link***
+https://go.dev/dl/
+
+***in downloads folder***
+
+sudo rm -rf /usr/local/go && sudo tar -C /usr/local -xzf go1.22.0.linux-amd64.tar.gz
+
+export PATH=$PATH:/usr/local/go/bin
+
+go version
+
+
+**in desktop**
+
+sudo apt install git
+
+git --version
+
+
+-----------------------------------------------------------------------------
+prac 2
+
+curl -sSL http://bit.ly/2ysbOFE | bash -s 2.2.0
+
+
+cd fabric-samples/test-network
+
+
+./network.sh up
+
+
+./network.sh createChannel
+
+
+./network.sh down
+
+-------------------------------------------------------------------------------
+prac 3
+(cd Downloads then sudo rm -rf /usr/local/go && sudo tar -C /usr/local -xzf go1.22.0.linux-amd64.tar.gz then  export PATH=$PATH:/usr/local/go/bin    cd )
+
+t1
+
+sudo apt install make
+
+
+git clone -b release/1.11 --depth 1 https://github.com/ethereum/go-ethereum.git
+
+
+cd go-ethereum
+
+**inside go-ethereum***
+
+make geth
+sudo ln -f ./build/bin/geth /usr/local/bin
+
+
+cd ..
+
+mkdir blockchain
+
+cd blockchain
+
+touch genesis.json
+
+***genesis.json***
+
+{
+  "config": {
+	"chainId": 6969,
+	"homesteadBlock": 0,
+	"eip150Block": 0,
+	"eip155Block": 0,
+	"eip158Block": 0,
+	"byzantiumBlock": 0,
+	"constantinopleBlock": 0,
+	"petersburgBlock": 0,
+	"ethash": {}
+  },
+  "difficulty": "4",
+  "gasLimit": "8000000",
+  "alloc": {}
+}
+
+
+geth init --datadir node1 genesis.json
+
+
+geth --datadir node1 --networkid 6969 --http --allow-insecure-unlock --nodiscover --rpc.enabledeprecatedpersonal --http.corsdomain "*"
+
+
+t2
+
+geth attach node1/geth.ipc
+
+admin.nodeInfo
+
+
+t3
+
+geth init --datadir node2 genesis.json
+
+
+geth --datadir node2 --networkid 6969 --port 42069 --authrpc.port 8552 --rpc.enabledeprecatedpersonal --http.corsdomain "*"
+
+
+t4
+
+geth attach node2/geth.ipc
+
+admin.nodeInfo
+
+admin.ddPeer("<enode value from t2[node1]")
+
+
+t2
+
+admin.ddPeer("<enode value from t4[node2]")
+
+admin.peers
+
+t4
+
+admin.peers
+
+
+t2
+
+personal.newAccount()
+
+miner.setEtherbase(personal.listAccounts[0])
+
+miner.start()
+
+***wait for 10-15 mins before stopping(when eth.blockNumber is not 0)***
+***make metamask account in the meantime***
+
+miner.stop()
+
+eth.blockNumber
+
+eth.getBalance("<address from the above newAccount command>")
+
+
+t4
+
+eth.blockNumber
+
+
+Install metamask and create a new account
+Add My Blockchain Network
+Let's add our Blockchain Network to MetaMask. Click on Ethereum Mainnet and select Add New Network option.
+
+My Blockchain
+http://127.0.0.1:8545/
+6969
+TOMB
+
+Importing accounts using json file
+The account json file can be found in database of the Node1 in your blockchain, the path to this file contains the account address
+
+Click on Account > Import account
+
+Select json file
+
+Transfer Funds
+Let's transfer some value from Account 2 to Account 1 to validate the structure and finish this post.
+First, go to Account 1 in MetaMask and copy the Account Public Address and back to Account 2.
+
+In Account 2 click on "Send" button, paste the public address of the Account 1 and type the value to transfer. Click on "Next" button and then click on "Confirm" button.
+The transaction will be with status "Pending", waiting for a block to be mined for validation.
+
+
+Now, it's necessary to start mining to validate that transaction. Let's do this in our blockchain using Geth in Javascript Console from Node1. Type the command:
+
+t2
+miner.start()
+Wait for some seconds and verify your account in MetaMask again.
+
+If you want, you can stop the mining in Node1 after the transaction validation. Type command to stop the mining:
+miner.stop()
+
+The transaction was validated and the Account 1 received the 69 TOMB.
+
+------------------------------------------------------------------------------
+prc 4
+
+sudo apt install jq
+
+
+cd fabric-samples/test-network
+
+
+./network.sh down
+
+
+./network.sh up createChannel -ca
+
+
+./network.sh deployCC -ccn abac -ccp ../asset-transfer-abac/chaincode-go/ -ccl go
+
+
+export PATH=${PWD}/../bin:${PWD}:$PATH
+export FABRIC_CFG_PATH=$PWD/../config/
+
+
+export FABRIC_CA_CLIENT_HOME=${PWD}/organizations/peerOrganizations/org1.example.com/
+
+
+fabric-ca-client register --id.name creator1 --id.secret creator1pw --id.type client --id.affiliation org1 --id.attrs 'abac.creator=true:ecert' --tls.certfiles "${PWD}/organizations/fabric-ca/org1/tls-cert.pem"
+
+
+fabric-ca-client enroll -u https://creator1:creator1pw@localhost:7054 --caname ca-org1 -M "${PWD}/organizations/peerOrganizations/org1.example.com/users/creator1@org1.example.com/msp" --tls.certfiles "${PWD}/organizations/fabric-ca/org1/tls-cert.pem"
+
+
+cp "${PWD}/organizations/peerOrganizations/org1.example.com/msp/config.yaml" "${PWD}/organizations/peerOrganizations/org1.example.com/users/creator1@org1.example.com/msp/config.yaml"
+
+
+
+fabric-ca-client register --id.name creator2 --id.secret creator2pw --id.type client --id.affiliation org1 --id.attrs 'abac.creator=true:' --tls.certfiles "${PWD}/organizations/fabric-ca/org1/tls-cert.pem"
+
+
+
+fabric-ca-client enroll -u https://creator2:creator2pw@localhost:7054 --caname ca-org1 --enrollment.attrs "abac.creator" -M "${PWD}/organizations/peerOrganizations/org1.example.com/users/creator2@org1.example.com/msp" --tls.certfiles "${PWD}/organizations/fabric-ca/org1/tls-cert.pem"
+
+
+
+cp "${PWD}/organizations/peerOrganizations/org1.example.com/msp/config.yaml" "${PWD}/organizations/peerOrganizations/org1.example.com/users/creator2@org1.example.com/msp/config.yaml"
+
+
+
+export CORE_PEER_TLS_ENABLED=true
+
+export CORE_PEER_LOCALMSPID="Org1MSP"
+
+export CORE_PEER_MSPCONFIGPATH=${PWD}/organizations/peerOrganizations/org1.example.com/users/creator1@org1.example.com/msp
+
+export CORE_PEER_TLS_ROOTCERT_FILE=${PWD}/organizations/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt
+
+export CORE_PEER_ADDRESS=localhost:7051
+
+export TARGET_TLS_OPTIONS=(-o localhost:7050 --ordererTLSHostnameOverride orderer.example.com --tls --cafile "${PWD}/organizations/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem" --peerAddresses localhost:7051 --tlsRootCertFiles "${PWD}/organizations/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt" --peerAddresses localhost:9051 --tlsRootCertFiles "${PWD}/organizations/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/tls/ca.crt")
+
+
+
+peer chaincode invoke "${TARGET_TLS_OPTIONS[@]}" -C mychannel -n abac -c '{"function":"CreateAsset","Args":["Asset1","blue","20","100"]}'
+
+
+peer chaincode query -C mychannel -n abac -c '{"function":"ReadAsset","Args":["Asset1"]}'
+
+
+
+export RECIPIENT="x509::CN=user1,OU=client,O=Hyperledger,ST=North Carolina,C=US::CN=ca.org1.example.com,O=org1.example.com,L=Durham,ST=North Carolina,C=US"
+
+peer chaincode invoke "${TARGET_TLS_OPTIONS[@]}" -C mychannel -n abac -c '{"function":"TransferAsset","Args":["Asset1","'"$RECIPIENT"'"]}'
+
+
+
+peer chaincode query -C mychannel -n abac -c '{"function":"ReadAsset","Args":["Asset1"]}'
+
+
+
+peer chaincode invoke "${TARGET_TLS_OPTIONS[@]}" -C mychannel -n abac -c '{"function":"UpdateAsset","Args":["Asset1","green","20","100"]}'
+
+
+
+export CORE_PEER_MSPCONFIGPATH=${PWD}/organizations/peerOrganizations/org1.example.com/users/User1@org1.example.com/msp
+
+
+
+peer chaincode invoke "${TARGET_TLS_OPTIONS[@]}" -C mychannel -n abac -c '{"function":"UpdateAsset","Args":["Asset1","green","20","100"]}'
+
+
+
+peer chaincode query -C mychannel -n abac -c '{"function":"ReadAsset","Args":["Asset1"]}'
+
+
+
+peer chaincode invoke "${TARGET_TLS_OPTIONS[@]}" -C mychannel -n abac -c '{"function":"DeleteAsset","Args":["Asset1"]}'
+
+
+
+peer chaincode query -C mychannel -n abac -c '{"function":"ReadAsset","Args":["Asset1"]}'
+
+
+
+peer chaincode invoke "${TARGET_TLS_OPTIONS[@]}" -C mychannel -n abac -c '{"function":"CreateAsset","Args":["Asset2","red","20","100"]}'
+
+
+./network.sh down
+
+---------------------------------------------------------------------------------
+prc 5
+
+--------------------------------------------------------------------------------
+prac 6
+
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+contract Voting {
+    // Declare variables to store the total votes for each team
+    uint256 public votesForTeamA;
+    uint256 public votesForTeamB;
+    uint256 public votesForTeamC;
+    address public owner;
+    mapping(address => bool) authorizedVoters;
+
+    constructor() {
+        owner = msg.sender;
+    }
+
+    modifier onlyAuthorizedVoter() {
+        require(
+            authorizedVoters[msg.sender] == true,
+            "You are not authorized to vote"
+        );
+        _;
+    }
+
+    modifier onlyOwner() {
+        require(msg.sender == owner, "Only the owner can call this function");
+        _;
+    }
+
+    // Function to allow a voter to cast their vote for a team
+    function vote(uint256 _team) public onlyAuthorizedVoter {
+        // Check the value of _team and increment the corresponding team's vote count
+        if (_team == 1) {
+            votesForTeamA += 1;
+        } else if (_team == 2) {
+            votesForTeamB += 1;
+        } else if (_team == 3) {
+            votesForTeamC += 1;
+        }
+    }
+
+    // Function to add a voter to the list of authorized voters
+    function addVoter(address _voter) public onlyOwner {
+        require(msg.sender == owner, "Only the owner can add a voter");
+        authorizedVoters[_voter] = true;
+    }
+
+    // Function to declare results of the vote
+    function getWinner() public view returns (string memory result) {
+        // Check the vote counts and return the winner
+        if (votesForTeamA > votesForTeamB && votesForTeamA > votesForTeamC) {
+            result = "Team A is the winner!";
+        } else if (
+            votesForTeamB > votesForTeamA && votesForTeamB > votesForTeamC
+        ) {
+            result = "Team B is the winner!";
+        } else if (
+            votesForTeamC > votesForTeamA && votesForTeamC > votesForTeamB
+        ) {
+            result = "Team C is the winner!";
+        } else {
+            result = "There is a tie!";
+        }
+    }
+
+    function getTotalVotes() public view returns (uint256) {
+        return votesForTeamA + votesForTeamB + votesForTeamC;
+    }
+}
